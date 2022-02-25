@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="container__title">Link Shortenrt</h1>
+
+        <div class="container__input">
+            <form id="form" action="">
+                <label for="input">Your link:</label>
+                <input id="input" class="input" type="text">
+                <button id="btn" class="btn btn--confirn">Get</button>
+            </form>
+        </div>
+
+        <div id="container__output">
+
+        </div>
+        <!-- <input value="1" type="text"> -->
+    </div>
+
+
+    <script>
+        let form = document.getElementById('form')
+        form.addEventListener('submit', handleSubmit)
+        let link = document.getElementById('input').value
+        function handleSubmit(e) {
+
+            e.preventDefault()
+            let text = document.getElementById('text')
+            let url = 'https://api.shrtco.de/v2/shorten?url=https://getbootstrap.com/docs/5.1/forms/input-group/'
+            let value = e.target.input.value
+            fetch(`https://api.shrtco.de/v2/shorten?url=${value}`)
+                .then(res => res.json())
+                .then((data) => {
+                    e.target.input.value = ''
+                    console.log(data.result.short_link)
+                    let containerOutput = document.getElementById('container__output')
+                    containerOutput.innerHTML = `
+                <input value = '${data.result.short_link}' id="text"></input>
+                <button class="btn btn--coppy" id="btn--coppy">Coppy</button>
+                
+                `
+                })
+                .then(()=>{
+                    let btnCoppy = document.querySelector('#btn--coppy')
+                    btnCoppy.addEventListener('click', () => {
+                        let copyText = document.getElementById('text')
+                        console.log(copyText);
+                        copyText.select();
+                        copyText.setSelectionRange(0, 99999);                       
+                        navigator.clipboard.writeText(copyText.value);
+                        alert("Copied: " + copyText.value);
+
+                    })
+                })
+
+        }
+    </script>
+
+
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</body>
+
+</html>
